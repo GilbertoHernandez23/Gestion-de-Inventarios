@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Productos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2c5aa0;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-section, .table-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2c5aa0;
+        }
+
+        .btn {
+            background: #2c5aa0;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+            width: 100%;
+            margin: 5px 0;
+        }
+
+        .btn:hover {
+            background: #1e3d6f;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #1e7e34;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: #28a745;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        th {
+            background: #2c5aa0;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .total-row {
+            background: #e3f2fd !important;
+            font-weight: bold;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .no-products {
+            text-align: center;
+            color: #6c757d;
+            padding: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏪 Sistema de Registro de Productos</h1>
+            <p>Gestión completa de inventario con almacenamiento local</p>
+        </div>
+
+        <div class="content">
+            <!-- Sección del Formulario -->
+            <div class="form-section">
+                <h2>📝 Registrar Nuevo Producto</h2>
+                <form id="productForm">
+                    <div class="form-group">
+                        <label for="nombre">Nombre del Producto:</label>
+                        <input type="text" id="nombre" placeholder="Ej: Laptop Dell Inspiron">
+                        <div class="error-message" id="nombreError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cantidad">Cantidad:</label>
+                        <input type="number" id="cantidad" placeholder="Ej: 10" min="0">
+                        <div class="error-message" id="cantidadError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="precio">Precio ($):</label>
+                        <input type="number" id="precio" placeholder="Ej: 299.99" min="0" step="0.01">
+                        <div class="error-message" id="precioError"></div>
+                    </div>
+
+                    <button type="button" class="btn" onclick="guardarProducto()">
+                        💾 Guardar Producto
+                    </button>
+
+                    <button type="button" class="btn btn-success" onclick="exportarATxt()">
+                        📄 Exportar a Archivo .txt
+                    </button>
+
+                    <button type="button" class="btn btn-secondary" onclick="cargarProductos()">
+                        🔄 Cargar Productos
+                    </button>
+
+                    <div class="success-message" id="successMessage"></div>
+                </form>
+            </div>
+
+            <!-- Sección de la Tabla -->
+            <div class="table-section">
+                <h2>📊 Inventario de Productos</h2>
+                <div id="tablaContainer">
+                    <div class="no-products" id="noProducts">
+                        No hay productos registrados. Agrega el primero usando el formulario.
+                    </div>
+                    <table id="productosTable" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Total</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaBody">
+                            <!-- Los productos se insertarán aquí dinámicamente -->
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="3"><strong>Total General:</strong></td>
+                                <td id="totalGeneral" colspan="2"><strong>$0.00</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
